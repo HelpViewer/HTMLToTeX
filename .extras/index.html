@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>HTML to TeX conversion tool test</title>
+  <script src="../HTMLToTeX.js" type="text/javascript"></script>
+  </head>
+  <body>
+  <div id="htmData">
+<h1>HTMLToTeX</h1>
+<h2>Purposes</h2>
+<p>The purpose of this documentation is to describe:</p>
+<ul>
+<li>The concept of the conversion tool</li>
+<li>Provide example demo</li>
+</ul>
+<h2>Examples</h2>
+<h3>Ordered list</h3>
+<p>Some of the valuable awards are:</p>
+<ol>
+<li><strong>Game of the Year</strong></li>
+<li>Pulitzer Prize</li>
+<li>Nobel Prize</li>
+<li>Order of the British Empire</li>
+</ol>
+<h3>Table</h3>
+<table>
+<thead>
+<tr>
+<th>Left column</th>
+<th>Right column</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>One</td>
+<td><strong>1st</strong></td>
+</tr>
+<tr>
+<td>Two</td>
+<td>2nd</td>
+</tr>
+<tr>
+<td>Source</td>
+<td><a href="https://github.com/HelpViewer/HTMLToTeX">Git repository</a></td>
+</tr>
+</tbody>
+</table>
+<h3>source code listing (Prism)</h3>
+<div class="code-toolbar"><pre class="language-javascript line-numbers" tabindex="0"><code class="language-javascript"><span class="token keyword keyword-const">const</span> pluginName <span class="token operator">=</span> <span class="token string">'puiButtonObjectExplorer'</span><span class="token punctuation">;</span>
+<span class="token keyword keyword-const">const</span> pluginId <span class="token operator">=</span> <span class="token string">'-load'</span><span class="token punctuation">;</span>
+<span class="token keyword control-flow keyword-await">await</span> <span class="token function">deactivatePlugin</span><span class="token punctuation">(</span>pluginName<span class="token punctuation">,</span> pluginId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span style="height: 24px;"></span><span style="height: 24px;"></span><span style="height: 24px;"></span></span><span class="line-numbers-sizer" style="display: none;"></span></code></pre><div class="toolbar"><div class="toolbar-item"><span>JavaScript</span></div><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div>
+  </div>
+
+<script>
+function convert() {
+  const htmData = document.getElementById('htmData');
+  const target = document.getElementById('outTA');
+
+const charMap = {
+  ':B': '\\',
+  ':C': '{',
+  ':D': '}'
+};
+  // redacted due to escape sequences
+  const doc = `%Run commands:
+%makeindex -shell-escape LaTeX1
+%pdflatex -interaction=nonstopmode -shell-escape LaTeX1.tex
+
+:Bdocumentclass[a4paper,12pt]:Carticle:D
+
+:Bnewcommand:C:Bauth:D:C_AUTH_:D
+:Bnewcommand:C:Bdocname:D:C_DOCNAME_:D
+
+:BUseRawInputEncoding
+
+:Busepackage[_LANG_]:Cbabel:D
+:Busepackage[utf8]:Cinputenc:D
+:Busepackage[T1]:Cfontenc:D
+:Busepackage:Chyperref:D
+
+:Busepackage:Cfloat:D
+:Busepackage:Cgraphicx:D
+:Busepackage:Cmakeidx:D
+:Busepackage[final]:Clistings:D
+
+:Busepackage:Carray:D
+:Busepackage:Ctabularx:D
+:Busepackage:Clongtable:D
+:Busepackage:Cfancyhdr:D
+:Busepackage:Clastpage:D
+
+:Busepackage:Cimakeidx:D
+:Bmakeindex[title=, columns=3]
+
+:Busepackage:Csvg:D
+
+:Blstset:C
+	numbers=left,
+	showstringspaces=false,
+	breaklines=true,
+	tabsize=2,
+	captionpos=b
+:D
+
+:Bfancypagestyle:Cplain:D:C
+:Bfancyhf:C:D
+
+:Brenewcommand:Bheadrulewidth:C0.4pt:D
+:Brenewcommand:Bfootrulewidth:C0.4pt:D
+
+:Bfancyhead[LE]:C:Bleftmark:D
+:Bfancyhead[LO]:C:Brightmark:D
+:Bfancyhead[RE]:C:Brightmark:D
+:Bfancyhead[RO]:C:Bleftmark:D
+
+:Bfancyfoot[LE,RO]:C:Bthepage / :Bpageref:CLastPage:D:D
+:Bfancyfoot[LO,RE]:C:Bdocname:D
+
+:Bfancyfoot[CO,CE]:C:D
+
+:D
+
+:Bbegin:Cdocument:D
+
+:Bbegin:Ctitlepage:D
+:Bvspace*:C5cm:D
+:Bbegin:Ccenter:D
+:C:BHuge :Bdocname:D:B:B[1cm]
+:C:BLarge :Bauth:D:B:B[1cm]
+:C:Btoday:D
+:Bend:Ccenter:D
+:Bend:Ctitlepage:D
+
+:Bnewpage
+
+:Bpagestyle:Cplain:D
+:Btableofcontents
+:Bpagestyle:Cplain:D
+:Bnewpage
+
+%DOC%
+
+:Bnewpage
+:Bpagestyle:Cfancy:D
+:Blistoftables
+:Blistoffigures
+:Blstlistoflistings
+:Bprintindex
+
+:Bend:Cdocument:D
+`.replace(/(:B)|(:C)|(:D)/g, match => charMap[match]);
+console.log("Template:\n", doc);
+  
+  //HTMLToTeX(parent, header, activeLanguage, config, ctx, doc)
+  const ctx = { listStack: [], i_img: 0, i_svg: 0 };
+  const result = HTMLToTeX(htmData, 'HTMLToTeX export test', 'en', [], ctx, doc);
+  target.value = result[0].replace('%DOC%', result[1]);
+  console.log("Result: [template, converted document text] :\n", result);
+}
+</script>
+<br><button type="button" onclick="convert()">Convert to TeX</button><br>
+<textarea id="outTA" cols="50" rows="20"></textarea>
+  </body>
+</html>
