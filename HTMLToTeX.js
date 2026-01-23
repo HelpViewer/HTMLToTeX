@@ -1,3 +1,8 @@
+function rowsToArray(t) {
+  if (!t) return [];
+  return t.replace(/\r\n|\r/g, '\n').split('\n');
+}
+
 function HTMLToTeX(parent, header, activeLanguage, config, ctx, document) {
   function clearHash(text) {
     let cleanedText = text;
