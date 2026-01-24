@@ -39,7 +39,11 @@ parameters:
 - header - String which is used as document name (used on title page and in page headings)
 - activeLanguage - language of your document (use en for default)
 - config - Configuration values (object with key value string pairs)
-- ctx - internal state context for single run (provide: { listStack: [], i_img: 0, i_svg: 0 } as default)
+- ctx - internal state context for single run (provide: { listStack: [], i_img: 0, i_svg: 0, embeds: new Map() } as default)
+  - listStack - ul/ol nesting sequence
+  - i_img - img tags found counter
+  - i_svg - svg tags found counter
+  - embeds - previously collected embedded objects (img, svg)
 - document - base LaTeX document template (you need to create your own, no default here, consult demo)
 
 to get result : array of :

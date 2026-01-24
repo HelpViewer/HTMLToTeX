@@ -152,7 +152,7 @@ const charMap = {
 console.log("Template:\n", doc);
   
   //HTMLToTeX(parent, header, activeLanguage, config, ctx, doc)
-  const ctx = { listStack: [], i_img: 0, i_svg: 0 };
+  const ctx = { listStack: [], i_img: 0, i_svg: 0, embeds: new Map() };
   const result = HTMLToTeX(htmData, 'HTMLToTeX export test', 'en', [], ctx, doc);
   target.value = result[0].replace('%DOC%', result[1]);
   console.log("Result: [template, converted document text] :\n", result);
