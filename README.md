@@ -58,6 +58,14 @@ result[0].replace('%DOC%', result[1]);
 
 to get complete TeX source code.
 
+## Known limits and issues
+
+- Tool only generates **TeX** source code
+- Tool focuses on using only the basic packages and functions of the TeX ecosystem
+- La/TeX compilation process must be executed several times due to page numbering issues (usual behavior on TeX platform)
+- Text formatting functions are used only to a basic extent (despite your HTML can be more rich in format)
+- SVG file insertion is currently not working correctly (e.g.: Windows with MikTeX system)
+
 ## Tips
 
 ### Page break in TeX

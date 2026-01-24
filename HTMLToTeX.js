@@ -32,12 +32,12 @@ function HTMLToTeX(parent, header, activeLanguage, config, ctx, document) {
     img: (node, ctx, children) => {
       ctx.i_img++;
       const path = ctx.embeds.get(node.src) || '';
-      return `\\begin{figure}\n\\centering\n\\includegraphics\{${path}\}\n\\caption{${node.title}}\n\\label{fig:I_${ctx.i_img}}\n\\end{figure}\n`;
+      return `\\begin{figure}[H]\n\\centering\n\\includegraphics\{${path}\}\n\\caption{${node.title}}\n\\label{fig:I_${ctx.i_img}}\n\\end{figure}\n`;
     },
     svg: (node, ctx, children) => {
       ctx.i_svg++;
       const path = ctx.embeds.get(node.src) || '';
-      return `\\includesvg\{${path}\}\n`;
+      return `\\includesvg[H]\{${path}\}\n`;
     },
     h1: (node, ctx, children) => `\\section\{${clearHash(children)}\}\n`,
     h2: (node, ctx, children) => `\\subsection\{${clearHash(children)}\}\n`,
