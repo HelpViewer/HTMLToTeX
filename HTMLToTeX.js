@@ -39,12 +39,12 @@ function HTMLToTeX(parent, header, activeLanguage, config, ctx, document) {
       const path = ctx.embeds.get(node.src) || '';
       return `\\includesvg[H]\{${path}\}\n`;
     },
-    h1: (node, ctx, children) => `\\section\{${clearHash(children)}\}\n`,
-    h2: (node, ctx, children) => `\\subsection\{${clearHash(children)}\}\n`,
-    h3: (node, ctx, children) => `\\subsubsection\{${clearHash(children)}\}\n`,
-    h4: (node, ctx, children) => `\\paragraph\{${clearHash(children)}\}\n`,
-    h5: (node, ctx, children) => `\\subparagraph\{${clearHash(children)}\}\n`,
-    h6: (node, ctx, children) => `\\subsubparagraph\{${clearHash(children)}\}\n`,
+    h1: (node, ctx, children) => `\\section\{${clearHash(children)}\}\\label\{sec:${node.lastChild.getAttribute('href').substring(1).replace(/-/g, '--')}\}\n`,
+    h2: (node, ctx, children) => `\\subsection\{${clearHash(children)}\}\\label\{sec:${node.lastChild.getAttribute('href').substring(1).replace(/-/g, '--')}\}\n`,
+    h3: (node, ctx, children) => `\\subsubsection\{${clearHash(children)}\}\\label\{sec:${node.lastChild.getAttribute('href').substring(1).replace(/-/g, '--')}\}\n`,
+    h4: (node, ctx, children) => `\\paragraph\{${clearHash(children)}\}\\label\{sec:${node.lastChild.getAttribute('href').substring(1).replace(/-/g, '--')}\}\n`,
+    h5: (node, ctx, children) => `\\subparagraph\{${clearHash(children)}\}\\label\{sec:${node.lastChild.getAttribute('href').substring(1).replace(/-/g, '--')}\}\n`,
+    h6: (node, ctx, children) => `\\subsubparagraph\{${clearHash(children)}\}\\label\{sec:${node.lastChild.getAttribute('href').substring(1).replace(/-/g, '--')}\}\n`,
     p: (node, ctx, children) => `${children}\\par\n`,
 
     div: (node, ctx, children) => {
@@ -99,14 +99,25 @@ function HTMLToTeX(parent, header, activeLanguage, config, ctx, document) {
       if (children.trim().replace('\\#', '#').length == 1)
         return '';
       
-      let href = node.href || '';
+      let href = node.getAttribute('href') || '';
       //href = href.replace(/&amp;/g, '&').replace(/&/g, '&amp;');
+      if (!href) {
+        href = node.getAttribute('id') || '';
+        if (href)
+          return `\\phantomsection\n\\label{sec:${href.replace(/-/g, '--')}}\n`;
+      }
+
       href = decodeURI(href);
       href = href
         .replace(/([#\$%&~^{}])/g, '\\$1')
         .replace(/_/g, '\\_');
       
-      return `\\href{${href}}{${children}}`;
+      if (href.startsWith('http'))
+        return `\\href{${href}}{${children}}`;
+      
+      href = node.getAttribute('href').replace(/-/g, '--') || '';
+      if (href.startsWith('#'))
+        return `\\hyperref[sec:${href.substring(1)}]{${children}}`;
     },
 
     script: (node, ctx, children) => '',
