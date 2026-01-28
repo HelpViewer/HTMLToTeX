@@ -100,7 +100,6 @@ function HTMLToTeX(parent, header, activeLanguage, config, ctx, document) {
         return '';
       
       let href = node.getAttribute('href') || '';
-      //href = href.replace(/&amp;/g, '&').replace(/&/g, '&amp;');
       if (!href) {
         href = node.getAttribute('id') || '';
         if (href)
@@ -118,6 +117,8 @@ function HTMLToTeX(parent, header, activeLanguage, config, ctx, document) {
       href = node.getAttribute('href').replace(/-/g, '--') || '';
       if (href.startsWith('#'))
         return `\\hyperref[sec:${href.substring(1)}]{${children}}`;
+      else
+        return `\\href{${decodeURI(node.href)}}{${children}}`;
     },
 
     script: (node, ctx, children) => '',
