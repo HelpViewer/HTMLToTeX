@@ -11,7 +11,7 @@ function HTMLToTeX(parent, header, activeLanguage, config, ctx, document, author
     return cleanedText.trim();
   }
 
-  const handlerBold = (node, ctx, children) => `\\textbf\{${children}\}\n`;
+  const handlerBold = (node, ctx, children) => `\\textbf\{${children}\}`;
 
   function getLabel(node) {
     if (node?.lastChild?.getAttribute)
