@@ -129,6 +129,7 @@ function HTMLToTeX(parent, header, activeLanguage, config, ctx, document, author
 
     script: (node, ctx, children) => '',
     style: (node, ctx, children) => '',
+    br: (node, ctx, children) => `\n\\par ${children}`,
 
     default: (node, ctx, children) => children
   };
