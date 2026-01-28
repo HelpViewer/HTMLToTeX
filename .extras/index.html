@@ -151,9 +151,9 @@ const charMap = {
 `.replace(/(:B)|(:C)|(:D)/g, match => charMap[match]);
 console.log("Template:\n", doc);
   
-  //HTMLToTeX(parent, header, activeLanguage, config, ctx, doc)
+  //HTMLToTeX(parent, header, activeLanguage, config, ctx, doc, author)
   const ctx = { listStack: [], i_img: 0, i_svg: 0, embeds: new Map() };
-  const result = HTMLToTeX(htmData, 'HTMLToTeX export test', 'en', [], ctx, doc);
+  const result = HTMLToTeX(htmData, 'HTMLToTeX export test', 'en', [], ctx, doc, 'HTMLToTeX demo');
   target.value = result[0].replace('%DOC%', result[1]);
   console.log("Result: [template, converted document text] :\n", result);
 }

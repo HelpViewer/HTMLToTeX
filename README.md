@@ -45,6 +45,7 @@ parameters:
   - i_svg - svg tags found counter
   - embeds - previously collected embedded objects (img, svg)
 - document - base LaTeX document template (you need to create your own, no default here, consult demo)
+- author - document author name
 
 to get result : array of :
 - 0 - base template

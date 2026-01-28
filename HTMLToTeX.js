@@ -3,7 +3,7 @@ function rowsToArray(t) {
   return t.replace(/\r\n|\r/g, '\n').split('\n');
 }
 
-function HTMLToTeX(parent, header, activeLanguage, config, ctx, document) {
+function HTMLToTeX(parent, header, activeLanguage, config, ctx, document, author) {
   function clearHash(text) {
     let cleanedText = text;
     if (text.endsWith('#'))
@@ -12,6 +12,12 @@ function HTMLToTeX(parent, header, activeLanguage, config, ctx, document) {
   }
 
   const handlerBold = (node, ctx, children) => `\\textbf\{${children}\}\n`;
+
+  function getLabel(node) {
+    if (node?.lastChild?.getAttribute)
+      return `\\label\{sec:${node.lastChild.getAttribute('href').substring(1).replace(/-/g, '--')}\}`;
+    return '';
+  }
 
   const handlers = {
     ul: (node, ctx, children) => {
@@ -39,12 +45,12 @@ function HTMLToTeX(parent, header, activeLanguage, config, ctx, document) {
       const path = ctx.embeds.get(node.src) || '';
       return `\\includesvg[H]\{${path}\}\n`;
     },
-    h1: (node, ctx, children) => `\\section\{${clearHash(children)}\}\\label\{sec:${node.lastChild.getAttribute('href').substring(1).replace(/-/g, '--')}\}\n`,
-    h2: (node, ctx, children) => `\\subsection\{${clearHash(children)}\}\\label\{sec:${node.lastChild.getAttribute('href').substring(1).replace(/-/g, '--')}\}\n`,
-    h3: (node, ctx, children) => `\\subsubsection\{${clearHash(children)}\}\\label\{sec:${node.lastChild.getAttribute('href').substring(1).replace(/-/g, '--')}\}\n`,
-    h4: (node, ctx, children) => `\\paragraph\{${clearHash(children)}\}\\label\{sec:${node.lastChild.getAttribute('href').substring(1).replace(/-/g, '--')}\}\n`,
-    h5: (node, ctx, children) => `\\subparagraph\{${clearHash(children)}\}\\label\{sec:${node.lastChild.getAttribute('href').substring(1).replace(/-/g, '--')}\}\n`,
-    h6: (node, ctx, children) => `\\subsubparagraph\{${clearHash(children)}\}\\label\{sec:${node.lastChild.getAttribute('href').substring(1).replace(/-/g, '--')}\}\n`,
+    h1: (node, ctx, children) => `\\section\{${clearHash(children)}\}${getLabel(node)}\n`,
+    h2: (node, ctx, children) => `\\subsection\{${clearHash(children)}\}${getLabel(node)}\n`,
+    h3: (node, ctx, children) => `\\subsubsection\{${clearHash(children)}\}${getLabel(node)}\n`,
+    h4: (node, ctx, children) => `\\paragraph\{${clearHash(children)}\}${getLabel(node)}\n`,
+    h5: (node, ctx, children) => `\\subparagraph\{${clearHash(children)}\}${getLabel(node)}\n`,
+    h6: (node, ctx, children) => `\\subsubparagraph\{${clearHash(children)}\}${getLabel(node)}\n`,
     p: (node, ctx, children) => `${children}\\par\n`,
 
     div: (node, ctx, children) => {
@@ -154,7 +160,7 @@ function HTMLToTeX(parent, header, activeLanguage, config, ctx, document) {
   }
 
   // TODO : Resolve author name in export
-  document = document.replace(/_AUTH_/g, '');
+  document = document.replace(/_AUTH_/g, author);
   document = document.replace(/_DOCNAME_/g, header);
   document = document.replace(/_LANG_/g, config[activeLanguage] || activeLanguage);
   document = document.replace(/_LSTSET_/g, config[`${activeLanguage}-lstset`] || '');
