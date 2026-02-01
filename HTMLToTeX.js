@@ -120,7 +120,7 @@ function HTMLToTeX(parent, header, activeLanguage, config, ctx, document, author
       if (href.startsWith('http'))
         return `\\href{${href}}{${children}}`;
       
-      href = node.getAttribute('href').replace(/-/g, '--') || '';
+      href = node.getAttribute('href')?.replace(/-/g, '--') || '';
       if (href.startsWith('#'))
         return `\\hyperref[sec:${href.substring(1)}]{${children}}`;
       else
